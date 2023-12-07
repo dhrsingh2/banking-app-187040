@@ -1,9 +1,16 @@
 package ps.training;
 
-public class RBI {
+public interface RBI {
+    int bankId = 0;
+    String bankName = "";
+    float balance = 0;
+    float fd_roi = 0;
+    float loan_roi = 0;
+    float minBalance = 0;
 
-    public void openFD(float amount, float ROI, int years) {}
-    public void applyLoan(String loanType, float amount, float ROI, int years) {}
-    public void applyCreditCard() {}
 
+    void depositMoney();
+    void withdrawMoney();
+    void openFD();
+    void getLoan();
 }

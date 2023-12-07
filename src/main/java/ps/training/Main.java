@@ -1,5 +1,9 @@
 package ps.training;
 
+import ps.training.banks.HDFC_Bank;
+import ps.training.banks.ICICI_Bank;
+import ps.training.banks.SBI_Bank;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,11 +35,17 @@ public class Main {
         // register user to the selected bank
         Customer customer = new Customer(obj.selectedBank, obj.buff, obj.isr);
 
+
+        RBI bank = null;
         // create bank account and initialise account balance to zero
-        Bank bank = new Bank(obj.selectedBank, obj.buff, obj.isr);
+        switch(obj.selectedBank) {
+            case 1 : bank = new ICICI_Bank(obj.selectedBank, obj.buff, obj.isr);
+            case 2 : bank = new HDFC_Bank(obj.selectedBank, obj.buff, obj.isr);
+            case 3 : bank = new SBI_Bank(obj.selectedBank, obj.buff, obj.isr);
+        }
 
         do {
-            System.out.println("Select your choice\n1. Deposit\n2. Withdrawl\n3. OpenFD\n4. Apply Loan\n5. Apply CC\n0. Exit");
+            System.out.println("Select your choice\n1. Deposit\n2. Withdrawal\n3. OpenFD\n4. Apply Loan\n5. Apply CC\n0. Exit");
             try {
                 obj.selectedOperation = Integer.parseInt(obj.buff.readLine());
             }
@@ -49,7 +59,7 @@ public class Main {
                 case 1: bank.depositMoney(); break;
                 case 2: bank.withdrawMoney(); break;
                 case 3: bank.openFD(); break;
-                case 4: System.out.println("Selected Apply Loan");
+                case 4: bank.getLoan(); break;
                 case 5: System.out.println("Selected Apply CC\n\n");
             }
         } while(obj.selectedOperation != 0);
