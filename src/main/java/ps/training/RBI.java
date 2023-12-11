@@ -13,4 +13,7 @@ public interface RBI {
     void withdrawMoney();
     void openFD();
     void getLoan();
+    int getCustomerCount();
+    void displayBalance();
+
 }

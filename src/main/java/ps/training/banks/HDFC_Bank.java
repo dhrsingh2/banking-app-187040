@@ -1,10 +1,12 @@
 package ps.training.banks;
 
+import ps.training.Customer;
 import ps.training.RBI;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 public class HDFC_Bank implements RBI {
     BufferedReader buff;
@@ -12,28 +14,38 @@ public class HDFC_Bank implements RBI {
     int bankId;
     String bankName;
     float balance;
-    float minBalance = 1000;
+    float minBalance = 100;
     float fd_roi = 1.1f;
     // Home Loan - Education Loan - Personal Loan - Car Loan
     float[] loan_roi = {5.5f, 3.4f, 6.3f, 8.2f};
+    HashMap<String, Customer> map;
+    Customer customer;
 
-
-    public HDFC_Bank(int bankId, BufferedReader buff, InputStreamReader isr) {
+    public HDFC_Bank(Customer customer, int bankId, BufferedReader buff, InputStreamReader isr, HashMap<String, Customer> map) {
         this.bankId = bankId;
         this.balance = 0;
         this.buff = buff;
         this.isr = isr;
+        this.map = map;
+        this.customer = customer;
+
+        if(map.containsKey(customer.getAadhaarNumber())) {
+            Customer value = map.get(customer.getAadhaarNumber());
+            this.balance = value.getBalance();
+            return;
+        }
+
+        map.put(customer.getAadhaarNumber(), customer);
 
         while(balance < minBalance) {
             balance = 0;
             System.out.println("You need to deposit a minimum amount of " + minBalance);
-            this.depositMoney();
+            depositMoney();
         }
     }
 
     public void getAccountDetails() {
-        System.out.println(bankId);
-        System.out.println(bankName);
+        System.out.println("Customer Name : " + customer.getName() + "\tCustomer Bank : " + customer.getBank() + "\tAccount Balance : " + customer.getBalance() + "\n\n");
     }
 
     public float calculateFD(float amt, float roi, int yrs) {
@@ -53,7 +65,8 @@ public class HDFC_Bank implements RBI {
             e.printStackTrace();
         }
         balance += amount;
-        System.out.println("Current balance : " + balance + "\n");
+        updateBalance();
+        displayBalance();
     }
     public void withdrawMoney(){
         float amount = 0;
@@ -71,7 +84,8 @@ public class HDFC_Bank implements RBI {
         }
 
         balance -= amount;
-        System.out.println("Current balance : " + balance + "\n");
+        updateBalance();
+        displayBalance();
     }
 
     public void openFD() {
@@ -91,7 +105,7 @@ public class HDFC_Bank implements RBI {
         }
 
         balance -= amount;
-        System.out.println("Succesfully opened an FD of amount INR " + amount);
+        System.out.println("Successfully opened an FD of amount INR " + amount);
         System.out.println("Your current balance is : " + balance);
 
         System.out.println("\nShowing first, second and third year FD projections for the balance of " + amount + " at ROI of " + fd_roi);
@@ -137,5 +151,20 @@ public class HDFC_Bank implements RBI {
 //          R = Monthly interest rate
         double emi = amount * roi * Math.pow((1 + roi), time) / Math.pow((1 + roi), time);
         System.out.println("You will have to pay an EMI of " + emi);
+    }
+
+    public int getCustomerCount() {
+        return map.size();
+    }
+
+    public void updateBalance() {
+        Customer value = map.get(customer.getAadhaarNumber());
+        value.setBalance(balance);
+        map.put(value.getAadhaarNumber(), value);
+    }
+
+    public void displayBalance() {
+        Customer value = map.get(customer.getAadhaarNumber());
+        System.out.println("Your current balance is " + value.getBalance() + "\n\n");
     }
 }
