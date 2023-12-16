@@ -44,6 +44,10 @@ public class ICICI_Bank implements RBI {
         }
     }
 
+    public ICICI_Bank(float initialDeposit) {
+        this.balance = initialDeposit;
+    }
+
     public void getAccountDetails() {
         System.out.println("Customer Name : " + customer.getName() + "\tCustomer Bank : " + customer.getBank() + "\tAccount Balance : " + customer.getBalance() + "\n\n");
     }
@@ -68,6 +72,7 @@ public class ICICI_Bank implements RBI {
         updateBalance();
         displayBalance();
     }
+
     public void withdrawMoney(){
         float amount = 0;
         System.out.println("Enter the amount you want to withdraw : ");
@@ -166,5 +171,19 @@ public class ICICI_Bank implements RBI {
     public void displayBalance() {
         Customer value = map.get(customer.getAadhaarNumber());
         System.out.println("Your current balance is " + value.getBalance() + "\n\n");
+    }
+
+    public float getBalance() {
+        return balance;
+    }
+
+    public float depositMoney(float depositAmount) {
+        balance += depositAmount;
+        return balance;
+    }
+
+    public float withdrawMoney(float withdrawAmount) {
+        balance -= withdrawAmount;
+        return balance;
     }
 }
